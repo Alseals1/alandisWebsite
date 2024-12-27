@@ -1,0 +1,68 @@
+@import "../../app.scss";
+
+.about {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 10 20px;
+  background: linear-gradient(180deg, #0c0c1d, #111132);
+
+  .about-content {
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  .about-title {
+    font-size: 96px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .about-text {
+    display: inline;
+  }
+
+  .about-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .about-description {
+    flex: 1;
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 50px;
+
+    @include mobile {
+      font-size: 20px;
+    }
+  }
+
+  .about-image-container {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+      display: none; // Hides the image container on screens smaller than 768px
+    }
+
+    .about-image {
+      max-height: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
