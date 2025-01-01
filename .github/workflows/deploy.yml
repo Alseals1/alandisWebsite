@@ -61,12 +61,12 @@ jobs:
       # Step 4: Sync website files to S3
       - name: Sync website files to S3
         run: |
-          aws s3 sync ./dist s3://your-bucket-name --delete
+          aws s3 sync ./dist s3://alandis-website  --delete
 
       # Step 5: Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
         run: |
-          aws cloudfront create-invalidation --distribution-id YOUR_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+          aws cloudfront create-invalidation --distribution-id EPT6AM87ACQE3 --paths "/*"
 
   smoke-test:
     runs-on: ubuntu-latest
