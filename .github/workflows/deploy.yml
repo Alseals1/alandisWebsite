@@ -52,6 +52,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Update to your AWS region
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with: 
+          terraform_version: 1.10.2
+
       # Step 3: Deploy Terraform IaC
       - name: Deploy IaC with Terraform
         run: |
