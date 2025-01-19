@@ -1,5 +1,7 @@
 import "./hero.scss";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const textVariants = {
   initial: {
@@ -38,12 +40,42 @@ const sliderVariants = {
   },
 };
 export const Hero = () => {
+  const [visitorCount, setVisitorCount] = useState(0);
+
+  // Function to increment the visitor counter by making an API request
+  const incrementCounter = async () => {
+    try {
+      const response = await axios.post("https://your-api-gateway-url", {
+        PrimaryKey: "visitorCount", // Primary key for DynamoDB
+        Data: 1, // Increment by 1
+      });
+      setVisitorCount(response.data.visit_count); // Assuming the Lambda function returns updated count
+    } catch (error) {
+      console.error("Error incrementing visitor count:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Call the API to fetch the initial visitor count when the component loads
+    axios
+      .get("https://your-api-gateway-url")
+      .then((response) => {
+        setVisitorCount(response.data.visit_count); // Set initial visitor count
+      })
+      .catch((error) => {
+        console.error("Error fetching visitor count:", error);
+      });
+  }, []);
+
   return (
     <div className="hero">
       <div className="wrapper">
         <motion.div className="textContainer" variants={textVariants}>
           <motion.h2 variants={textVariants}>Alandis Seals</motion.h2>
           <motion.h1 variants={textVariants}>Developer</motion.h1>
+          <div className="button" onClick={incrementCounter}>
+            Visitors: {visitorCount}
+          </div>
           <motion.div className="buttons" variants={textVariants}>
             {/* Latest Works Button START*/}
 
@@ -68,7 +100,7 @@ export const Hero = () => {
               whileTap={{ scale: 0.9 }}
             >
               <a
-                href="#Contact"
+                href="#contact"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 Contact
