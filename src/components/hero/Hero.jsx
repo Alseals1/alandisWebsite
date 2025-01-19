@@ -45,10 +45,13 @@ export const Hero = () => {
   // Function to increment the visitor counter by making an API request
   const incrementCounter = async () => {
     try {
-      const response = await axios.post("https://your-api-gateway-url", {
-        PrimaryKey: "visitorCount", // Primary key for DynamoDB
-        Data: 1, // Increment by 1
-      });
+      const response = await axios.post(
+        "https://k9vjizweub.execute-api.us-east-1.amazonaws.com/prod/update-counter",
+        {
+          PrimaryKey: "visitorCount", // Primary key for DynamoDB
+          Data: 1, // Increment by 1
+        }
+      );
       setVisitorCount(response.data.visit_count); // Assuming the Lambda function returns updated count
     } catch (error) {
       console.error("Error incrementing visitor count:", error);
