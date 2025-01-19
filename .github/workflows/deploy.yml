@@ -61,13 +61,13 @@ jobs:
       # Step 4: Deploy infrastructure using Terraform
       - name: Deploy IaC with Terraform
         run: |
-          terraform init -backend-config="bucket=my-terraform-state" -backend-config="key=state/terraform.tfstate"
+          terraform init
           terraform apply -auto-approve
 
       # Step 5: Sync website files to S3
       - name: Sync website files to S3
         run: |
-          aws s3 sync ./dist s3://alandis-website --delete --cache-control "max-age=31536000,public"
+          aws s3 sync ./dist s3://alandis-website --delete
 
       # Step 6: Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
