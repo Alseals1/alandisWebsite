@@ -44,26 +44,26 @@ jobs:
         with:
           name: build-artifacts
 
-      # Step 2: Configure AWS credentials
+      # Step 2: Setup Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.10.2
+
+      # Step 3: Deploy infrastructure using Terraform
+      - name: Deploy IaC with Terraform
+        run: |
+          cd terraform
+          terraform init 
+          terraform apply -auto-approve
+
+      # Step : Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 # Update with your region  # Update to your AWS region
-
-      # Step 3: Setup Terraform
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.10.2
-
-      # Step 4: Deploy infrastructure using Terraform
-      - name: Deploy IaC with Terraform
-        run: |
-          cd terraform 
-          terraform init
-          terraform apply -auto-approve
 
       # Step 5: Sync website files to S3
       - name: Sync website files to S3
