@@ -53,8 +53,8 @@ jobs:
       # Step 3: Deploy infrastructure using Terraform
       - name: Deploy IaC with Terraform
         run: |
-          cd terraform
           terraform init 
+          cd terraform
           terraform apply -auto-approve
 
         # Step 4: Configure AWS credentials
