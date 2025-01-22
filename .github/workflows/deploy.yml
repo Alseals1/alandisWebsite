@@ -62,8 +62,8 @@ jobs:
       - name: Deploy IaC with Terraform
         run: |
           cd terraform
-          terraform init
-          terraform apply -auto-approve
+          terraform init ./terraform
+          terraform apply -auto-approve ./terraform
 
       # Step 5: Sync website files to S3
       - name: Sync website files to S3
