@@ -23,7 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-# Terraform state files
-.terraform/
-/.tfstate
-/.tfstate.backup
+terraform/
