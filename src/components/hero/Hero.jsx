@@ -39,35 +39,56 @@ const sliderVariants = {
     },
   },
 };
-export const Hero = () => {
-  const [visitorCount, setVisitorCount] = useState(0);
 
-  // Function to increment the visitor counter by making an API request
+export const Hero = () => {
+  const [visitorCount, setVisitorCount] = useState(0); // Visitor count state
+  const [isLoading, setIsLoading] = useState(false); // Loading state for better UX
+  const [error, setError] = useState(null); // Error state for API issues
+
+  const API_BASE_URL =
+    "https://5ywaw56nua.execute-api.us-east-1.amazonaws.com/prod/SaveToDynamoDB";
+
+  // Function to increment the visitor counter
   const incrementCounter = async () => {
+    setIsLoading(true); // Show loading state
+    setError(null); // Reset error state
     try {
-      const response = await axios.post(
-        "https://k9vjizweub.execute-api.us-east-1.amazonaws.com/prod/update-counter",
-        {
-          PrimaryKey: "visitorCount", // Primary key for DynamoDB
-          Data: 1, // Increment by 1
-        }
-      );
-      setVisitorCount(response.data.visit_count); // Assuming the Lambda function returns updated count
+      const response = await axios.post(API_BASE_URL, {
+        PrimaryKey: "visitor", // Primary key for DynamoDB
+        Data: 1, // Increment by 1
+      });
+      console.log("Response Status:", response.status);
+      console.log("Response Data:", response.data);
+      setVisitorCount(response.data.visit_count); // Update the count in the UI
     } catch (error) {
       console.error("Error incrementing visitor count:", error);
+      setError(Response);
+      console.error(
+        "Error incrementing visitor count:",
+        error.response?.status
+      );
+      console.error("Error Response:", error.response?.data);
+    } finally {
+      setIsLoading(false); // Hide loading state
     }
   };
 
+  // Fetch initial visitor count when the component mounts
   useEffect(() => {
-    // Call the API to fetch the initial visitor count when the component loads
-    axios
-      .get("https://your-api-gateway-url")
-      .then((response) => {
-        setVisitorCount(response.data.visit_count); // Set initial visitor count
-      })
-      .catch((error) => {
+    const fetchVisitorCount = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(API_BASE_URL);
+        setVisitorCount(response.data.visit_count); // Update the count in the UI
+      } catch (error) {
         console.error("Error fetching visitor count:", error);
-      });
+        setError("Failed to fetch visitor count. Please refresh the page.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchVisitorCount();
   }, []);
 
   return (
@@ -77,11 +98,12 @@ export const Hero = () => {
           <motion.h2 variants={textVariants}>Alandis Seals</motion.h2>
           <motion.h1 variants={textVariants}>Developer</motion.h1>
           <div className="button" onClick={incrementCounter}>
-            Visitors: {visitorCount}
+            {isLoading ? "Loading..." : `Visitors: ${visitorCount}`}
           </div>
+          {error && <p className="error">{error}</p>}{" "}
+          {/* Display error message */}
           <motion.div className="buttons" variants={textVariants}>
-            {/* Latest Works Button START*/}
-
+            {/* Latest Works Button */}
             <motion.button
               variants={textVariants}
               whileHover={{ scale: 1.1 }}
@@ -95,8 +117,7 @@ export const Hero = () => {
               </a>
             </motion.button>
 
-            {/* Latest Works Button END*/}
-            {/* Contact Button START*/}
+            {/* Contact Button */}
             <motion.button
               variants={textVariants}
               whileHover={{ scale: 1.1 }}
@@ -109,9 +130,8 @@ export const Hero = () => {
                 Contact
               </a>
             </motion.button>
-            {/* Contact Button END*/}
 
-            {/* Download Resume Button START*/}
+            {/* Download Resume Button */}
             <motion.button
               variants={textVariants}
               whileHover={{ scale: 1.1 }}
@@ -119,19 +139,18 @@ export const Hero = () => {
             >
               <a
                 href="/AlandisResumeNov2024.pdf"
-                download="AlandisResumeNov2024.pdf" // Correct usage of the download attribute
+                download="AlandisResumeNov2024.pdf"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 Download Resume
               </a>
             </motion.button>
-            {/* Download Resume Button END */}
           </motion.div>
           <motion.img
             variants={textVariants}
             animate="scrollButton"
             src="/scroll.png"
-            alt=""
+            alt="Scroll indicator"
           />
         </motion.div>
       </div>
@@ -145,7 +164,7 @@ export const Hero = () => {
           AWS IOS Express REACT
         </motion.div>
 
-        <img src="/IMG2.png" className="imageContainer" />
+        <img src="/IMG2.png" className="imageContainer" alt="Hero" />
       </div>
     </div>
   );
