@@ -17,7 +17,6 @@ resource "null_resource" "upload_dist_folder" {
  provisioner "local-exec" {
   command = "aws s3 sync alandis-portfolio/dist s3://${aws_s3_bucket.main.bucket}/ --delete"
 }
-
   depends_on = [aws_s3_bucket.main]
 }
 
