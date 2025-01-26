@@ -39,10 +39,12 @@ jobs:
 
     steps:
       # Step 1: Download build artifacts
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifacts
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: List files for debugging
+      - name: List files for debugging
+        run: ls -la
 
       # Step 2: Setup Terraform
       - name: Set up Terraform
@@ -53,7 +55,6 @@ jobs:
       # Step 3: Deploy infrastructure using Terraform
       - name: Deploy IaC with Terraform
         run: |
-          cd terraform
           terraform init
           terraform apply -auto-approve
 
@@ -65,13 +66,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 # Update with your region  # Update to your AWS region
 
-      # Step : Configure AWS credentials
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # Update with your region  # Update to your AWS region
+      - name: Deploy IaC with Terraform
+        run: |
+          cd terraform # Navigate to the Terraform directory
+          terraform init
+          terraform apply -auto-approve
 
       # Step 5: Sync website files to S3
       - name: Sync website files to S3
